@@ -61,6 +61,13 @@
 #define smb_mb__before_spinlock()	smp_mb()
 #define smb_mb__after_spinlock()	smp_mb()
 
+/*
+ * Fence for dependent load
+ */
+#ifdef CONFIG_DEP_LD_REORDER
+#define read_barrier_depends() RISCV_FENCE(ir,ir)
+#endif
+
 #include <asm-generic/barrier.h>
 
 #endif /* __ASSEMBLY__ */

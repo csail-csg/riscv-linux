@@ -172,7 +172,12 @@ static inline pte_t mk_pte(struct page *page, pgprot_t prot)
 
 static inline pte_t *pte_offset_kernel(pmd_t *pmd, unsigned long addr)
 {
-	return (pte_t *)pmd_page_vaddr(*pmd) + pte_index(addr);
+	pte_t *ret = (pte_t *)pmd_page_vaddr(*pmd) + pte_index(addr);
+#ifdef CONFIG_DEP_LD_REORDER
+	// Alpha has a fence here
+	smp_read_barrier_depends();
+#endif
+	return ret;
 }
 
 #define pte_offset_map(dir, addr)	pte_offset_kernel((dir), (addr))

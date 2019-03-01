@@ -134,6 +134,10 @@ config NR_CPUS
 	depends on SMP
 	default "8"
 
+config DEP_LD_REORDER
+	bool "Prevent reordering of dependent loads"
+	default n
+
 config CPU_SUPPORTS_32BIT_KERNEL
 	bool
 config CPU_SUPPORTS_64BIT_KERNEL

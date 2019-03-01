@@ -70,7 +70,12 @@ static inline unsigned long pud_page_vaddr(pud_t pud)
 
 static inline pmd_t *pmd_offset(pud_t *pud, unsigned long addr)
 {
-	return (pmd_t *)pud_page_vaddr(*pud) + pmd_index(addr);
+	pmd_t *ret = (pmd_t *)pud_page_vaddr(*pud) + pmd_index(addr);
+#ifdef CONFIG_DEP_LD_REORDER
+	// Alpha has a fence here
+	smp_read_barrier_depends();
+#endif
+	return ret;
 }
 
 static inline pmd_t pfn_pmd(unsigned long pfn, pgprot_t prot)
